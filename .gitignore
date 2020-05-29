@@ -1,7 +1,16 @@
+#code from https://stackoverflow.com/questions/987142/make-gitignore-ignore-everything-except-a-few-files
+#ignore everything
 *
 
+#subdirectory setting(not ignore)
 !*/
+
+#subdirectory do not ignore list
 !.gitignore
 !README.md
+
+#only c and cpp files
+!*.c
+!*.cpp
 !*/*.c
 !*/*.cpp
