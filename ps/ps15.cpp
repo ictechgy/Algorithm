@@ -10,15 +10,16 @@ int main(void){
     //고전적인 풀이방식
     int cnt = 0;
     start = clock();
-    for(int i = 2; i <= n; i++){    //1은 소수가 아니다.
+    int i, j;
+    for(i = 2; i <= n; i++){    //1은 소수가 아니다.
         //i가 소수인지 검증
-        for(int j = 2; j < i; j++){
+        for(j = 2; j < i; j++){
             if(i % j == 0){
                 break;
             }
-            if(i == j){
-                cnt++;
-            }
+        }
+        if(i == j){
+            cnt++;
         }
     }
     end = clock();
@@ -65,5 +66,25 @@ int main(void){
     printf("개선 2 - 소요시간 : %f\n", (double)(end - start) / CLOCKS_PER_SEC); //약 0.007초
     
     
+    return 0;
+}
+
+//
+#include <stdio.h>
+int main(){
+    int n, i, j, flag, cnt = 0;
+    scanf("%d", &n);
+    for(i = 2; i <=n; i++){
+        flag = 1;
+        for(j = 2; j*j < i; j++){   //sqrt까지는 필요없다.
+            if(i % j == 0){
+                flag = 0;
+                break;
+            }
+        }
+        if(flag == 1) cnt++;
+    }
+    printf("%d\n", cnt);
+
     return 0;
 }
