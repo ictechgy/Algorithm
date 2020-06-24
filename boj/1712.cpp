@@ -30,7 +30,10 @@ int main(void){
     if(var >= price){
         printf("-1\n");
     }else{
-        num = (int)((double)fix / (price - var) + 1);
+        //num = (int)((double)fix / (price - var) + 1);
+        num = fix / (price - var) + 1;
+        //굳이 실수형으로까지 할 필요는 없네. 나머지 없이 정수로 딱 나누어 떨어지든 그렇지 않든간에 소수점 이하는 의미가 없으며
+        //1을 더해야 하는 것은 매한가지다. 10대를 팔아 제로섬이 되든 10.9대를 팔아 제로섬이 되든 이익이 나려면 11대를 팔아야 하는 것은 동일하다.
         printf("%d\n", num);
     }
 
