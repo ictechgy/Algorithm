@@ -14,3 +14,9 @@
 !*.cpp
 !*/*.c
 !*/*.cpp
+
+#sql, python, etc..
+!*.sql
+!*.py
+!*/*.sql
+!*/*.py
