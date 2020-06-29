@@ -14,7 +14,7 @@ int main(void){
     //최소거리는 1, 최대거리는 arr.end()-arr.front()이다. 이 중 가능한 가장 최대의 거리 구하기
     int pl = 1, pr = arr.back() - arr.front(), dist, max = -2140000000, j, gap;
     while(pl <= pr){
-        dist = (pl + pr) / 2 - pl;   //중간 거리 값 선택
+        dist = (pl + pr) / 2;   //중간 거리 값 선택
         j = 0;  //arr에 대한 인덱스
         gap = 0;
         for(i = 2; i < c; i++){ //해당 dist 이상으로 모두 배치가 가능한지 체크
