@@ -70,3 +70,5 @@ string solution(int n){
     return answer;
 }
 
+//다른 사람의 풀이를 보면 나보다 간단하게 푼 풀이들이 많다....
+//특히 재귀적인 방법을 사용하지 않고 while로 iterative하게 푼 사람들..과 1을 빼서 계산하도록 구현한 사람들. 
