@@ -18,7 +18,7 @@ void proc_carry(string& s, int p){    //processe carry, s - 숫자 원문, p - c
         break;
     case '4':   //이 경우 carry를 넘겨받았는데 또 carry가 발생하게 되는 경우가 된다. 
         s[p-1] = '1';
-        proc_carry(s, p-1); //recurcive call
+        proc_carry(s, p-1); //carry occured, recurcive call
         break;
     }
 }
@@ -51,3 +51,22 @@ string solution(int n) {
     }
     return num;
 }
+
+//위의 방식은 효율성 테스트에서 시간초과가 발생한다. 어떤 수학적 방법으로 풀어야 될 듯 하다...
+//맨 우측 값부터 구해나가는 함수 작성, 몫과 나머지 값에 따른 재귀호출로 구현
+string su[] = {"0", "1", "2", "4"};   
+string converse(int num){
+    if(num <= 3) return su[num];    //base-case
+    int quo = num / 3;  //몫 quotient
+    int rem = num % 3;  //나머지 remainder
+    if(num%3 == 0) {    //3의 배수인 경우 몫과 나머지에 대한 보정
+        quo -= 1;
+        rem += 3;
+    }
+    return converse(quo).append(su[rem]);   //recursive call. 몫에 대하여 함수를 재 호출하면 이전 글자를 구할 수 있다.
+}
+string solution(int n){
+    string answer = converse(n);
+    return answer;
+}
+
