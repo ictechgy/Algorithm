@@ -34,3 +34,47 @@ int solution(vector<int> priorities, int location) {
     cnt += 1; //~ 번째이므로 자기보다 앞선 작업의 개수에 +1번째가 된다. 
     return cnt;
 }
+
+//queue로 구현해보자.. 
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int solution(vector<int> priorities, int location) {
+    queue<int> que;
+    vector<int> feq(10);
+    int i, tmp, cnt = 0, val = priorities[location], max = 0;
+    for(i = 0; i < priorities.size(); i++){
+        tmp = priorities[i];
+        que.push(tmp);  //큐에 옮기기
+        feq[tmp]++;     //각 우선순위별 수 저장 
+        if(max < tmp) max = tmp;    //최고 우선순위 작업의 우선순위 값을 저장
+    }
+
+    while(1){
+        if(feq[max] == 0) max--;    //최고우선순위 작업의 개수가 0개가 된 경우 그 밑의 우선순위 작업 가리키기
+        tmp = que.front();
+        //tmp보다 큐에 우선순위가 높은 값이 있을까?
+        if(tmp < max){  //max값이 tmp보다 크다는건 더 큰 우선순위 작업이 있음을 의미. 굳이 feq[max] 안해도 됨
+            que.pop();
+            que.push(tmp);  //뒤로 보내기
+        }
+        
+
+        if(tmp > val){
+            //내 요청보다 높은 우선순위라면 그 숫자의 값에 상관 없이 어차피 내 요청보다는 먼저 실행될 것
+            cnt++;
+            que.pop();
+            location--;
+        }else if(tmp == val){   //맨 앞에 있는 숫자가 내 요청과 동일한 우선순위라면 내 요청인지 검증해야 함
+            if(location == 0){
+                return cnt++; //~번째이므로 
+            }else{  //내 작업이 아니라면
+
+            }
+        }
+        
+    }
+}
