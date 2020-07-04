@@ -35,27 +35,8 @@ int solution(vector<int> priorities, int location) {
     return cnt;
 }
 
-//queue로 구현해보자.. 
-#include <string>
-#include <vector>
-#include <queue>
-
-using namespace std;
-
-int solution(vector<int> priorities, int location) {
-    queue<int> que;
-    int i, tmp, cnt = 0, val = priorities[location];
-    //너무 복잡하게 풀지 않아도 될거같다.. -> 어째 위에서 풀려고 했던 방식과 비슷해져가는 것 같은데..? 
-    for(i = location-1; i>=0; i--){
-
-    }
-
-    for(i = 0; i < priorities.size(); i++){
-        tmp = priorities[i];
-        if(tmp > val){  //내 요청보다 높은 우선순위의 작업은 어차피 내 요청보다 먼저 수행된다. -> queue에 넣을 필요가 없다. 
-            cnt++;
-        }else{
-            que.push(tmp);  
-        }
-    }
-}
+//queue로 구현해보자..  -> 그냥 위의 방식이 나을 것 같다.
+//큐로 구현 시 가장 간단하게는 front값을 pop할 때 뒤에 우선순위가 더 높은 값이 있는지 매번 체크해서 push를 다시 할지 말지를 결정하는건데..
+//pop만 수행되었을 시 cnt값을 증가시키고, 내가 요청한 작업의 위치값을 추적하는 방식으로.. 
+//근데 이렇게 하면 맨 앞의 원소 하나당 뒤의 원소 n개를 비교해야하는거고, n이 굉장히 커지면 복잡도는 O(n^2)정도 될거같음.. 
+//큐를 굳이 써야할까? 써야한다면 어떤 방식으로 쓰는게 맞는걸까..? 
