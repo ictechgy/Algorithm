@@ -2,16 +2,17 @@
 
 #include <stdio.h>
 
-int partition(int data[], int left, int right){
+int partition(int data[], int left, int right){ //pivot을 기준으로 피봇보다 작은 값, 큰 값으로 나누는 함수
     int i, j, pivot = data[right], tmp;     
-    for(i = left-1, j = left; j < right; j++){
-        if(data[j] < pivot){
+    for(i = left-1, j = left; j < right; j++){  //i는 피봇보다 작은 값들 중 가장 오른쪽 값을 가리키며(피봇을 기준으로 작은 값과 큰 값을 나누는 기준) j는 다음에 피봇과 크기를 비교할 인덱스를 가리킨다.
+        if(data[j] < pivot){    //data[j]가 pivot보다 크다면 그건 그 위치에 있는 것으로 충분
             i++;
             tmp = data[i];
             data[i] = data[j];
             data[j] = tmp;
         }
     }
+    //마지막으로 피봇값을 가운데쪽에 넣어준다.
     tmp = data[++i];
     data[i] = pivot;
     data[right] = tmp;
@@ -23,7 +24,7 @@ int partition(int data[], int left, int right){
 //랜덤 선택에 따른 최악의 실행 경우의 수가 존재하게 된다. 
 
 void quick_sort(int data[], int left, int right){
-    if(left < right){
+    if(left < right){   //base case는 left >= right인 경우로서 원소가 하나이거나 0개인 경우 -> sort 할 것이 없음
         int pivot = partition(data, left, right);   //pivot값 기준으로 분류한 후 pivot의 위치 반환
         quick_sort(data, left, pivot-1);
         quick_sort(data, pivot+1, right);
