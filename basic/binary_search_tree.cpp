@@ -68,5 +68,29 @@ Node* tree_insert(Node* root, element value){
 }
 
 Node* tree_delete(Node* root, element value){
+    //삭제 할 노드를 먼저 찾는다
+    Node *wanted = tree_search(root, value);
+    if(wanted == NULL) return NULL; //찾는 노드가 없는 경우
 
+    Node *del = NULL;   //실제로 삭제하는 노드를 가리킬 포인터
+    if(wanted->left == NULL || wanted->right == NULL) del = wanted; //자식이 0개이거나 1개인 경우 해당 노드를 바로 삭제하면 된다. 
+    else del = tree_successor(wanted);  //자식이 2개인 경우 삭제하려고 한 노드의 successor를 찾는다.
+    
+    Node *child = NULL; //삭제될 노드의 자식노드를 가리킨다. 이 때 자식노드는 무조건 1개 이하이다. 
+    if(del->left != NULL) child = del->left;
+    else child = del->right;
+    if(child != NULL) child->parent = del->parent;
+
+    if(del->parent == NULL) root = child; //삭제하려던 노드가 root노드였다면 자식 노드가 새로운 root노드가 된다. 
+    else if(del->parent->left == del) del->parent->left = child;
+    else del->parent->right = child;
+
+    if(wanted != del){  //처음에 삭제하려던 노드와 실제 삭제되는 노드가 다른 경우 -> del이 successor가 된 경우
+        wanted->key = del->key; //값 복사
+    }
+
+    del->left = del->right = del->parent = NULL;
+    delete(del);
+    return root;    //삭제되는 노드(wanted의 값..)를 반환해주는 것도 고려해볼 수 있다. 단 del이 successor가 된 경우 마지막 조건문에 의해 wanted의 값이
+    //successor의 값이 되므로 이 부분 주의하면서.. 
 }
