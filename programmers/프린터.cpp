@@ -108,3 +108,6 @@ int solution(vector<int> priorities, int location) {
     }
     return cnt;
 }
+
+//다른 사람의 풀이 중에서는 max_element()함수를 쓰면서 모든 작업의 순서를 구해내는 방식도 있고..
+//이중 반복문으로 간단하게 푼 사람도 있다.(max_element()사용)
