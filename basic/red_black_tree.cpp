@@ -115,3 +115,108 @@ Node* rb_insert(Node *root, Node *node){
     rb_insert_fixup(root, node);
     return root;
 }
+
+Node* tree_minimum(Node *node){
+    while((node->left) != NULL) node = node->left;
+    return node;
+}
+
+Node* tree_successor(Node *node){   
+    if(node->right != NULL) return tree_minimum(node->right);   
+    Node *parent = node->parent;
+    while(parent != NULL && (parent->right) == node){
+        node = parent;
+        parent = parent->parent;
+    }
+    return parent;
+}
+
+void rb_delete_fixup(Node *root, Node *node){
+    //node가 NULL인 경우나.. 아래 case 중에서 w의 자식 존재에 대해 보장하지 못하는 경우에는 어떻게 해야할까..?
+    //NIL노드를 정말로 하나 직접 구현해 두는 것도 괜찮은 방법일 것 같긴 한데.. 
+    while(node != root && node->color == BLACK){
+        Node *w = NULL;    //w is node's sibling. w는 무조건 있다. 
+        if(node = node->parent->left){  //case 1, 2, 3, 4
+            w = node->parent->right;        
+            if(w->color == RED){    //case 1 -> case 2, 3, 4중 하나로 분기
+                w->color = BLACK;
+                node->parent->color = RED;
+                left_rotate(root, node->parent);
+                w = node->parent->right;
+            }
+            if(w->left->color == BLACK && w->right->color == BLACK){    //case 2 - root까지 올라갈 가능성이 있는 경우임
+                w->color = RED;
+                node = node->parent;
+            }else{ 
+                if(w->left->color == RED){    //case 3
+                    w->left->color = BLACK;
+                    w->color = RED;
+                    right_rotate(root, w);
+                    w = node->parent->right;
+                }
+                //case 4
+                w->color = node->parent->color;
+                node->parent->color = BLACK;
+                w->right->color = BLACK;
+                left_rotate(root, node->parent);
+                node = root;    //case 4로 처리됐다면 더 이상 진행할 필요가 없음. while문을 끝내기 위함
+            }
+        }else{  //case 5, 6, 7, 8
+            w = node->parent->left;
+            if(w->color == RED){
+                w->color = BLACK;
+                node->parent->color = RED;
+                right_rotate(root, node->parent);
+            }
+            if(w->left->color == BLACK && w->right->color == BLACK){
+                w->color = RED;
+                node = node->parent;
+            }else{
+                if(w->right->color == RED){
+                    w->right->color = BLACK;
+                    w->color = RED;
+                    left_rotate(root, w);
+                    w = node->parent->left;
+                }
+                w->color = node->parent->color;
+                node->parent->color = BLACK;
+                w->left->color = BLACK;
+                right_rotate(root, node->parent);
+                node = root;
+            }
+        }
+    }
+    node->color = BLACK;
+}
+
+Node* rb_delete(Node* root, Node* wanted){
+    //삭제할 노드를 이미 찾았다고 가정한다. 
+
+    Node *del = NULL;  
+    if(wanted->left == NULL || wanted->right == NULL) del = wanted; 
+    else del = tree_successor(wanted);  
+    
+    Node *child = NULL; 
+    if(del->left != NULL) child = del->left;
+    else child = del->right;
+    if(child != NULL) child->parent = del->parent;
+
+    if(del->parent == NULL) root = child;
+    else if(del->parent->left == del) del->parent->left = child;
+    else del->parent->right = child;
+
+    if(wanted != del){ 
+        wanted->key = del->key; 
+    }
+
+    if(del->color == BLACK) {   //삭제하는 노드가 RED였다면 아무 문제가 없으나 BLACK이라면 수정해줘야 하는 부분이 생긴다.
+        rb_delete_fixup(root, child);
+        //만약 child가 NULL(NIL노드)라면 어떻게 해야할까..? 
+        //임시로 NIL노드를 만들고 처리 후에 해당 노드를 제거하는 방식을 써야하나? 
+    }
+
+    del->left = del->right = del->parent = NULL;
+    delete(del);
+
+    return root;   
+}
