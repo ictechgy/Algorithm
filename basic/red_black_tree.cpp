@@ -52,9 +52,10 @@ Node* right_rotate(Node *root, Node *x){    //x가 부모노드, y가 그 왼쪽
 
 void rb_insert_fixup(Node *root, Node *node){   //Insert된 노드에 의해 위배된 규칙을 맞추기 - rb_insert() 내부에서 호출
     //node는 insert된 노드를 가리킴. color는 RED
+    Node *y = NULL;
     while(node->parent != NULL && node->parent->color == RED){
         if(node->parent->parent->left == node->parent){ //case 1, 2, 3인 경우
-            Node *y = node->parent->parent->right;
+            y = node->parent->parent->right;
             if(y != NULL && y->color == RED){   //case 1 - parent의 sibling이 RED인 경우
                 node->parent->color = BLACK;
                 y->color = BLACK;
@@ -70,8 +71,23 @@ void rb_insert_fixup(Node *root, Node *node){   //Insert된 노드에 의해 위
                 node->parent->parent->color = RED;
                 right_rotate(root, node->parent->parent);
             }
-        }else{  //case 4, 5, 6인 경우
-            
+        }else{  //case 4, 5, 6인 경우 - node->parent->parent->right == node->parent;
+            y = node->parent->parent->left; //parent의 sibling
+            if(y != NULL && y->color == RED){   //case 4 - parent의 sibling이 RED인 경우
+                node->parent->color = BLACK;
+                y->color = BLACK;
+                node->parent->parent->color = RED;
+                node = node->parent->parent;
+            }else{  //case 5 or 6 - parent의 sibling(y)이 NULL이거나 BLACK인 경우
+                if(node->parent->left = node){
+                    node = node->parent;
+                    right_rotate(root, node);
+                }
+                //case 6
+                node->parent->color = BLACK;
+                node->parent->parent->color = RED;
+                left_rotate(root, node->parent->parent);
+            }
         }
     }
     //case 1 or 4가 root까지 올라갔을 수 있으므로..
