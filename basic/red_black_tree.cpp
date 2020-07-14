@@ -12,6 +12,7 @@ typedef struct tree_node{
 } Node;
 //혹은 어떤 NIL노드를 직접적으로 만들어야 할까? 만약에 어떤 편이성을 위해서 만들어야만 한다면 color만 BLACK으로 만들어두면 되려나.. 
 //scope는 전역으로? 
+//Search는 BST와 동일
 
 //기본적으로 가장 필요한 연산인 rotate
 Node* left_rotate(Node *root, Node *x){     //x가 부모노드이고 y가 그 오른쪽 자식일 때 이를 시계반대방향으로 rotate
