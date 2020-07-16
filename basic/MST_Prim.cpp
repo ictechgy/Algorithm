@@ -62,34 +62,33 @@ void MST_Prim(int s){   //출발노드를 하나 선택받기
     //일단은 키값과 pred값을 단순하게 쓰는 방법으로 구현해보자. 
 
     vector<pair<int, int> > mst;    //mst 구성 edge 저장
-    vector<pair<int, int> > edges;  //edge들
+    bool added[N] = {false, };  //추가되었는지 여부 판단 -> V_A여부 판단
     int cost = 0;   //총 비용
     for(i = 0; i < N; i++){
         key[i] = x; //모든 노드의 키 초기값은 무한대
         pred[i] = s; //V_A노드와의 연결 없음, 출발노드로 기본값 설정
-        edges.push_back(make_pair(key[i], i));
     }
-    edges[s].first = 0; //출발노드의 key값을 0으로 만든다.(최초 선택을 위해)
+    key[s] = 0; //출발노드의 key값을 0으로 만든다.(최초 선택을 위해)
     int min, node;    //최소비용 간선 찾기용
     while(mst.size() < N){  //최초 출발노드가 기본 포함되므로 N번 반복
         min = x;
-        for(i = 0; i < edges.size(); i++){
-            if(min > edges[i].first){
-                min = edges[i].first;
+        for(i = 0; i < N; i++){
+            if(added[i] == false && min > key[i]){
+                min = key[i];
                 node = i;
             }
         }
         //간선의 최소값과 그 노드를 찾은 상태
-        mst.push_back(make_pair(pred[node], edges[node].second));
+        mst.push_back(make_pair(pred[node], node));
         cost += min;
+        added[node] = true;  //해당 간선은 연결되었으므로 다음 검색에 나오지 않도록
 
         for(int i = 0; i < N; i++){
-            if(adj[node][i] < key[i]) {
+            if(added[i] == false && adj[node][i] < key[i]) {
                 key[i] = adj[node][i];
                 pred[i] = node;
             }
         }
-        edges.erase(edges.begin()+node);//해당 간선은 연결되었으므로 다음 검색에 나오지 않도록
     }
 
     for(i = 0; i < mst.size(); i++){
