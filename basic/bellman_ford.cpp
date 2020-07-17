@@ -13,12 +13,12 @@ using namespace std;
 int adj[][N]{       //self edge는 없으므로 자기자신에 대한 경로는 무한대로
     {inf, 10, 5, inf, inf},
     {inf, inf, 2, 1, inf},
-    {inf, 3, inf, 9, inf},
+    {inf, 3, inf, 9, 2},
     {inf, inf, inf, inf, 4},
     {7, inf, inf, 6, inf}
 };
 
-//벨만포드 알고리즘은 모든 엣지에 대하여 relax연산을 n-1번 수행한다.
+//벨만포드 알고리즘은 모든 엣지에 대하여 relax연산을 n-1번 수행한다.(엣지의 개수가 m일 때 m번 relax 연산을 n-1번 -> O(mn)복잡도)
 //어떤 노드 s에서 v까지의 최단경로에 포함된 엣지는 최대 n-1개이기 때문(노드의 개수가 n개일 때 모든 엣지를 지나는 경우)
 //음수 사이클이 있는지도 판단이 가능하다. 
 
@@ -46,7 +46,7 @@ bool bellman_ford(int s){   //시작지점 지정
 
     int node, weight;
     for(i = 0; i < N; i++){ //n-1번 반복
-        for(j = 0; j = edges.size(); j++){
+        for(j = 0; j < edges.size(); j++){
             node = edges[j].second.second;  //이 간선정보가 어느 노드를 대상으로 하는가
             if(d[node] > d[edges[j].second.first] + edges[j].first){    //relax
                 d[node] = d[edges[j].second.first] + edges[j].first;
@@ -56,11 +56,21 @@ bool bellman_ford(int s){   //시작지점 지정
 
     }
     //negative cycle 검사
-    for(j = 0; j = edges.size(); j++){
+    for(j = 0; j < edges.size(); j++){
         node = edges[j].second.second; 
         if(d[node] > d[edges[j].second.first] + edges[j].first){   
             return false;   //음수 사이클 존재
         }
     }
+
+    for(i = 0; i < N; i++){
+        printf("%d to %d - distance : %d, predecessor : %d\n", s, i, d[i], pred[i]);
+    }
+    
     return true;
+}
+
+int main(void){
+    bellman_ford(0);
+    return 0;
 }
