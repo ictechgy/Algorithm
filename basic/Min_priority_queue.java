@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Min_priority_queue<T extends Comparable<T>> {   //최소우선순위 큐
-    private ArrayList<T> queue = new ArrayList<>();
+    private ArrayList<T> queue = new ArrayList<>(); //or 배열로 구현해도 될 듯
 
     public Min_priority_queue(){}   //default 
     public Min_priority_queue(ArrayList<T> list){   //정렬되지 않은 List가 들어오면
@@ -32,10 +32,19 @@ public class Min_priority_queue<T extends Comparable<T>> {   //최소우선순�
         heapify(child);
     }
     T extract_min(){
+        if(queue.isEmpty()) return null;
         Collections.swap(queue, 0, queue.size()-1);
         T item = queue.get(queue.size()-1);
         queue.remove(queue.size()-1);
         heapify(0);
         return item;
+    }
+
+    int getSize(){
+        return queue.size();
+    }
+
+    T getElement(int index){
+        return queue.get(index);
     }
 }
