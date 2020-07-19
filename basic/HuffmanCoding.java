@@ -1,3 +1,5 @@
+//from (inflearn)영리한 프로그래밍을 위한 알고리즘 강좌 by 권오흠 교수님
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ class Run implements Comparable<Run>{ //각각의 Run을 나타낼 객체 클래
 
     public int codeword;
     public int codewordLen;
+
+    public Run(){}
 
     public Run(byte symbol, int runLen){    //기존에 없던 Run을 생성할때의 생성자
         this.symbol = symbol;
@@ -55,6 +59,7 @@ public class HuffmanCoding {
     private Min_priority_queue<Run> heap;
     private Run theRoot = null;
     private Run[] chars = new Run[256];
+    private long sizeOriginalFile;
 
     private void findRunAndProcess(byte symbol, int runLen){  //특정 Run이 이미 리스트에 존재하는지 검색하고 없으면 새로 만들어서 추가, 있으면 freq를 증가시키는 함수
         Run run = new Run(symbol, runLen);
@@ -224,5 +229,50 @@ public class HuffmanCoding {
         storeRunsIntoArray(theRoot);
         fIn.seek(0);
         encode(fIn, fOut);
+    }
+
+    public void decompressFile(String inFileName, RandomAccessFile fIn) throws IOException{
+        String outFileName = new String(inFileName + ".dec");
+        RandomAccessFile fOut = new RandomAccessFile(outFileName, "rw");
+        inputFrequencies(fIn);
+        createHuffmanTree();
+        assignCodewords(theRoot, 0, 0);
+        decode(fIn, fOut);
+    }
+
+    private void inputFrequencies(RandomAccessFile fIn) throws IOException{
+        int runSize = fIn.readInt();    //압축할 때 넣은 run 개수
+        long fileLen = fIn.readLong();  //압축할 때 넣은 원본파일의 Byte길이
+        sizeOriginalFile = fileLen;
+        runs.ensureCapacity(runSize);   //for performance
+        for(int i = 0; i < runSize; i++){
+            Run r = new Run();
+            r.symbol = (byte)fIn.read();
+            r.runLen = fIn.readInt();
+            r.freq = fIn.readInt();
+            runs.add(r);
+        }
+    }
+
+    private void decode(RandomAccessFile fIn, RandomAccessFile fOut) throws IOException{
+        int nbrBytesRead = 0, j, ch, bitCnt = 1, mask = 1, bits = 8;
+        mask <<= bits - 1;  //mask -> 10000000
+        for(ch = fIn.read(); ch!=-1 && nbrBytesRead < sizeOriginalFile; ){
+            //1바이트씩 읽으므로 ch가 4바이트이기는 하지만 실질적으로 값이 있는 부분은 하위 1바이트
+            Run p = theRoot;
+            while(true){
+                if(p.left == null && p.right == null){
+                    for(j = 0; j < p.runLen; j++) fOut.write(p.symbol);
+                    nbrBytesRead += p.runLen;
+                    break;
+                }else if((ch & mask) == 0) p = p.left;  //최상위 비트가 0이면
+                else p = p.right;   //최상위 비트가 1이면
+
+                if(bitCnt++ == bits){
+                    ch = fIn.read();
+                    bitCnt = 1;
+                }else ch <<= 1;
+            }
+        }
     }
 }

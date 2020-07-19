@@ -1,3 +1,5 @@
+//from (inflearn)영리한 프로그래밍을 위한 알고리즘 강좌 by 권오흠 교수님
+
 import java.util.ArrayList;
 import java.util.Collections;
 
