@@ -19,7 +19,7 @@ int main(void){
     vector<vector<int> > chk(n+2, vector<int>(n+2, 0)); //봉우리인 부분은 1로 만들고 봉우리가 될 수 없는 부분은 -1로 만든다.
     for(i = 1; i <= n; i++){
         for(j = 1; j <= n; j++){
-            if(checkPeak(map, i, j, chk)) cnt++; //(i,j)가 봉우리라면 카운팅
+            if(checkPeak(map, i, j, chk)) cnt++; //(i,j)가 봉우리라면 true를 반환하고 이를 카운팅
         }
     }
     printf("%d\n", cnt);
@@ -32,12 +32,12 @@ bool checkPeak(vector<vector<int> > &map, int i, int j, vector<vector<int> > &ch
     if(chk[i][j] == -1) return false;   //봉우리가 될 수 없는 부분인 경우
     else{   //chk[i][j] == 0 인 경우
         int height = map[i][j];
-        if(map[i-1][j] < height && map[i][j+1] < height && map[i+1][j] < height && map[i-1][j] < height){   
+        if(map[i-1][j] < height && map[i][j+1] < height && map[i+1][j] < height && map[i][j-1] < height){   
             //또는 상하좌우지점 중 max값만을 가져와서 height와 비교하는 것도 괜찮을 듯
             chk[i-1][j] = -1;
             chk[i][j+1] = -1;
             chk[i+1][j] = -1;
-            chk[i-1][j] = -1;
+            chk[i][j-1] = -1;
             chk[i][j] = 1;  //해당 지역은 봉우리
             return true;
         }
@@ -45,3 +45,5 @@ bool checkPeak(vector<vector<int> > &map, int i, int j, vector<vector<int> > &ch
         return false;
     }
 }
+
+//
