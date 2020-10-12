@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int Map[25][25], n, cnt = 0, area;
+int Map[30][30], n, cnt = 0, area;
 int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, 1, 0, -1};
 vector<int> district;
@@ -22,7 +22,7 @@ int main(void){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    char buffer[25];
+    char buffer[30];
     cin >> n;
     for(int i = 0; i < n; i++){
         cin >> buffer;
