@@ -30,19 +30,19 @@ bool DFS(int k){
         return true;
     }else{
         Coord blank = blanks[k];
-        int index = 3*((blank.y-1)/3) + (blank.x-1/3)+1;
+        int index = 3*((blank.y-1)/3) + ((blank.x-1)/3)+1;
         //blank좌표가 있는 곳의 위치가 ckBox의 몇번째 칸에 해당하는지 구하는 공식. 
-        //배열값이 0,0으로 시작한다면 3으로 나눈 몫으로 각각의 칸을 구분할 수 있으므로 (같은 칸의 좌표들은 모두 동일 값으로 귀결) 
+        //배열값이 0,0으로 시작한다면 3으로 나눈 몫으로 각각의 칸을 구분할 수 있으므로 (같은 칸의 좌표들은 3으로 나누는 경우 모두 동일 값으로 귀결) 
         //x,y좌표에 1을 뺀 값을 3으로 나누고, ckBox가 1부터 시작하므로 마지막에 1을 더함
 
         for(int i = 1; i <= 9; i++){
             if(ckRow[blank.y][i] == false && ckColumn[i][blank.x] == false && ckBox[index][i] == false){   
                 //빈 공간의 가로, 세로, 박스칸에서 동시에 쓰이지 않은 숫자가 있다면
-                Map[blank.y][blank.x] = i;
-                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = true;
+                Map[blank.y][blank.x] = i;  //해당 빈칸에 값 할당
+                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = true;  //사용체크
                 if(DFS(k+1)) return true;
-                Map[blank.y][blank.x] = 0;
-                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = false;
+                Map[blank.y][blank.x] = 0;  //이 구문은 있어도 되고 없어도 되고
+                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = false; //해당 숫자를 이용하였을 때 문제가 안풀리므로 사용체크 해제
             }
         }
         return false;
@@ -177,6 +177,7 @@ int main(void){
 
     for(int i = 1; i < 10; i++){
         bool isUsed[10] = {false, };    //각 숫자가 각 행에서 쓰였는지 체크.
+        blanks.clear();
         for(int j = 1; j < 10; j++){
             cin >> Map[i][j];
             isUsed[Map[i][j]] = true;
