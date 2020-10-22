@@ -2,11 +2,52 @@
 //DFS해나가면서 쓰이지 않은 값만 선택되도록 만들어야 하나? 어떻게 작성 해야하지 그럼?
 //쓰이지 않은 값에 대한 vector를 사용한다면 DFS하면서 각 단계에서 특정 숫자를 선택하여 쓴 경우
 //해당 숫자에 대한 사용처리를 하기가 애매하니까 bool형 배열을 쓰는게 나을 수도 있겠다.. 
-//(vector에서 지웠다가 다시 추가하는 등의 백트래킹이 불편)
+//(vector로는 지웠다가 다시 추가하는 등의 백트래킹이 불편)
 #include <bits/stdc++.h>
 using namespace std;
 int Map[10][10];
-bool ckRow[10][10], ckColumn[10][10], ckBox[10][10];    //각각의 행, 열, 박스에서 1~9의 숫자가 쓰였는지 체크할 배열
+bool ckRow[10][10], ckColumn[10][10], ckBox[10][10];    //각각의 행, 열, 3x3박스에서 1~9의 숫자가 쓰였는지 체크할 배열
+
+struct Coord{
+    int y, x;
+    
+    Coord(int a, int b){
+        y = a;
+        x = b;
+    }
+};
+Coord starts[9] = {{1, 1}, {1, 4}, {1, 7}, {4, 1}, {4, 4}, {4, 7}, {7, 1}, {7, 4}, {7, 7}};
+vector<Coord> blanks;
+
+bool DFS(int k){
+    if(k >= blanks.size()){
+        for(int i = 1; i <= 9; i++){
+            for(int j = 1; j <= 9; j++){
+                cout << Map[i][j] << " ";
+            }
+            cout << "\n";
+        }
+        return true;
+    }else{
+        Coord blank = blanks[k];
+        int index = 3*((blank.y-1)/3) + (blank.x-1/3)+1;
+        //blank좌표가 있는 곳의 위치가 ckBox의 몇번째 칸에 해당하는지 구하는 공식. 
+        //배열값이 0,0으로 시작한다면 3으로 나눈 몫으로 각각의 칸을 구분할 수 있으므로 (같은 칸의 좌표들은 모두 동일 값으로 귀결) 
+        //x,y좌표에 1을 뺀 값을 3으로 나누고, ckBox가 1부터 시작하므로 마지막에 1을 더함
+
+        for(int i = 1; i <= 9; i++){
+            if(ckRow[blank.y][i] == false && ckColumn[i][blank.x] == false && ckBox[index][i] == false){   
+                //빈 공간의 가로, 세로, 박스칸에서 동시에 쓰이지 않은 숫자가 있다면
+                Map[blank.y][blank.x] = i;
+                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = true;
+                if(DFS(k+1)) return true;
+                Map[blank.y][blank.x] = 0;
+                ckRow[blank.y][i] = ckColumn[i][blank.x] = ckBox[index][i] = false;
+            }
+        }
+        return false;
+    }
+}
 
 int main(void){
     ios_base::sync_with_stdio(false);
@@ -14,8 +55,21 @@ int main(void){
     for(int i = 1; i <= 9; i++){
         for(int j = 1; j <= 9; j++){
             cin >> Map[i][j];
+            ckRow[i][Map[i][j]] = true;
+            ckColumn[Map[i][j]][j] = true;
+            if(Map[i][j] == 0) blanks.push_back(Coord(i, j));
         }
     }
+    for(int k = 1; k <= 9; k++){
+        Coord start = starts[k-1];
+        for(int i = start.y; i < start.y+3; i++){
+            for(int j = start.x; j < start.x+3; j++){
+                ckBox[k][Map[i][j]] = true;
+            }
+        }
+    }
+
+    DFS(0);
 
     return 0;
 }
