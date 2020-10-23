@@ -60,20 +60,20 @@ int main(void){
 
             int after;
             after = multiply(n);
-            if(after == B) cout << s + "D" << "\n"; break;
-            q.push(Register(after, s + "D"));
+            if(after == B) {cout << s + "D" << "\n"; break;}
+            if(after != A) q.push(Register(after, s + "D"));
 
             after = subtract(n);
-            if(after == B) cout << s + "S" << "\n"; break;
-            q.push(Register(after, s + "S"));
+            if(after == B) {cout << s + "S" << "\n"; break;}
+            if(after != A) q.push(Register(after, s + "S"));
 
             after = left(n);
-            if(after == B) cout << s + "L" << "\n"; break;
-            q.push(Register(after, s + "L"));
+            if(after == B) {cout << s + "L" << "\n"; break;}
+            if(after != A) q.push(Register(after, s + "L"));
 
             after = right(n);
-            if(after == B) cout << s + "R" << "\n"; break;
-            q.push(Register(after, s + "R"));
+            if(after == B) {cout << s + "R" << "\n"; break;}
+            if(after != A) q.push(Register(after, s + "R"));
         }
     }
 
