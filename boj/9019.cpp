@@ -13,31 +13,22 @@ int subtract(int n){
 }
 
 int left(int n){
-    if(n < 10) return n;    //한자리 수인 경우에는 굳이 처리할 필요가 없다.
-    int len = 1, tmp = n;
-    while(tmp >= 10){
-        tmp /= 10;
-        len *= 10;
-    }   //이 과정을 거치면 tmp는 n의 맨 앞자리 숫자가 되고 len은 n과 동일한 자릿수의 10의 승 수가 된다.
-    return (n - (tmp * len))*10 + tmp;
+    if(n < 1000) return n * 10;
+    int front = n / 1000;   //맨 앞자리 수
+    n = (n - (front * 1000))*10 + front;
+    return n;
 }
 
 int right(int n){
-    if(n < 10) return n;
-    int back = n % 10;  //1의 자리 수
-    int len = 1, tmp = n;
-    while(tmp >= 10){
-        tmp /= 10;
-        len *= 10;
-    }
-    n /= 10;
-    return n + (back*len);
+    int last = n % 10;  //맨 뒤의 수
+    n = (n / 10) + (last * 1000);
+    return n;
 }
 
 struct Register{
     int num;
     string command;
-    Register(int n, /*const string &s*/ string s){
+    Register(int n, const string &s){
         num = n;
         command = s;
     }
@@ -59,12 +50,10 @@ int main(void){
         ck[A] = true;
 
         while(!q.empty()){
-            //Register &node = q.front();
-            Register node = q.front();
+            Register &node = q.front();
             q.pop();
             int n = node.num;
-            //string &s = node.command;
-            string s = node.command;
+            string &s = node.command;
 
             int after;
             after = multiply(n);
